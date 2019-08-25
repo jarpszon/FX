@@ -10,6 +10,10 @@ token=data_loaded['token']
 user=data_loaded['username']
 host=data_loaded['host']
 
+def GetAccountInfo():
+    url = "https://" + host + '/v3/accounts/101-004-12033863-001'
+
+
 def GetPairHist(pair, startDate, endDate,gran, count):
     url = "https://" + host + "/v1/candles?instrument=" + pair + "&count=" + count + "&candleFormat=midpoint&granularity=" + gran + "&dailyAlignment=0&alignmentTimezone=America%2FNew_York"
     #url = "https://api-fxtrade.oanda.com/v1/candles?instrument=EUR_USD&count=10&candleFormat=midpoint&granularity=M15&dailyAlignment=0&alignmentTimezone=America%2FNew_York"
