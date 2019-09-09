@@ -167,7 +167,7 @@ if __name__ == '__main__':
     #GetOpenTradesId()
     #CloseOpenTrades()
     #for x in GetOpenTradesId():
-    #    CloseOpenTrades(x)
+    print(CloseOpenTrades(116))
     GetOpenTradesId()
     #OANDAServiceCheck()
     #a,b = GetPairHistForCheck('EUR_USD', count='12', gran = 'M15', query='Prev_9 < 0 and Prev_10 < 0')

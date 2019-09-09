@@ -15,7 +15,7 @@ type = "MARKET"
 
 #check if current bar meet query criteria
 currBarrStartTime,queryOK = API.GetPairHistForCheck(curr, count='12', gran = 'M15', query='Prev_1 > 0 ')
-print(str(currBarrStartTime) + " | " + str(queryOK))
+#print(str(currBarrStartTime) + " | " + str(queryOK))
 
 #getting last full bast start time
 with open(strategyName + '_LastBarStartTime.txt','r') as h:
@@ -23,26 +23,28 @@ with open(strategyName + '_LastBarStartTime.txt','r') as h:
 if lastBarStartTime:
     lastBarStartTime = datetime.strptime(lastBarStartTime, "%Y-%m-%d %H:%M:%S" ) #  "%Y-%m-%dT%H:%M:%S.000000Z")
 currBarrStartTime = datetime.strptime(currBarrStartTime, "%Y-%m-%dT%H:%M:%S.000000Z")
-print(str(lastBarStartTime) + ' | ' + str(currBarrStartTime) )
+#print(str(lastBarStartTime) + ' | ' + str(currBarrStartTime) )
 
 #check if current bar start time is > then last bar start time and if the query is met
 if lastBarStartTime < currBarrStartTime:
-    with open(strategyName + '_LastOrder.txt', 'w+') as h:
+    with open(strategyName + '_LastOrder.txt', 'r') as h:
         lastOrderID = h.readline()
-    if lastOrderID:
-        a = API.CloseOpenTrades(lastOrderID)
+        print(lastOrderID)
+    if lastOrderID :
+        lastOrderInfo = API.CloseOpenTrades(lastOrderID)
+        print(lastOrderInfo)
         with open(strategyName + '_LastOrder.txt', 'w+') as h:
             h.write("")
-        with open(strategyName + '_StratSummary.txt', 'a+') as h:
-            h.write(str(a))
+        with open(strategyName + '_StratSummary.txt', 'a') as h1:
+            h1.write(str(lastOrderInfo))
 
     if queryOK ==1:
-        a=API.OpenMarketOrder(curr, units, side, type)
-        with open(strategyName + '_LastOrder.txt', 'w+') as h:
-            h.write(str(a))
+        newOrderID=API.OpenMarketOrder(curr, units, side, type)
+        with open(strategyName + '_LastOrder.txt', 'w+') as h2:
+            h2.write(str(newOrderID))
 
-    with open(strategyName + '_LastBarStartTime.txt','w+') as h:
-        h.write(str(currBarrStartTime))
+    with open(strategyName + '_LastBarStartTime.txt','w+') as h3:
+        h3.write(str(currBarrStartTime))
 
 
 
