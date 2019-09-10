@@ -14,7 +14,7 @@ type = "MARKET"
 """
 
 #check if current bar meet query criteria
-currBarrStartTime,queryOK = API.GetPairHistForCheck(curr, count='12', gran = 'M15', query='Prev_1 > 0 ')
+currBarrStartTime,queryOK = API.GetPairHistForCheck(curr, count='12', gran = 'M15', query='Prev_1 < 0 ')
 #print(str(currBarrStartTime) + " | " + str(queryOK))
 
 #getting last full bast start time
@@ -29,14 +29,16 @@ currBarrStartTime = datetime.strptime(currBarrStartTime, "%Y-%m-%dT%H:%M:%S.0000
 if lastBarStartTime < currBarrStartTime:
     with open(strategyName + '_LastOrder.txt', 'r') as h:
         lastOrderID = h.readline()
-        print(lastOrderID)
+        #print(lastOrderID)
     if lastOrderID :
         lastOrderInfo = API.CloseOpenTrades(lastOrderID)
-        print(lastOrderInfo)
+        #print(lastOrderInfo)
         with open(strategyName + '_LastOrder.txt', 'w+') as h:
             h.write("")
         with open(strategyName + '_StratSummary.txt', 'a') as h1:
-            h1.write(str(lastOrderInfo))
+            test = str(lastOrderID) + " | " + lastOrderInfo['orderFillTransaction']['time']  + " | " + lastOrderInfo['orderFillTransaction']['instrument'] + " | " + lastOrderInfo['orderFillTransaction']['units'] + " | " + lastOrderInfo['orderFillTransaction']['tradesClosed'][0]['realizedPL'] + " | " + lastOrderInfo['orderFillTransaction']['accountBalance']
+            #print(test)
+            h1.write(str(test + '\n'))
 
     if queryOK ==1:
         newOrderID=API.OpenMarketOrder(curr, units, side, type)

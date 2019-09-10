@@ -49,12 +49,13 @@ def GetOpenTradesId():
 def OpenMarketOrder(pair, units, side, type):
     url = host + "/v3/accounts/101-004-12033863-001/orders"
     payload =  "{\"order\": {\"instrument\": \"" + pair +  "\", \"units\": "  + units + ", \"side\": \"" + side + "\", \"type\": \"" + type + "\"}}"
-    print(payload)
+    #print(payload)
     head = {'Content-Type': "application/json", 'Authorization': 'Bearer 36d05c504600ee53cbaebd2d7fd872f6-ec6ea1868a87be65621c6c23ba0e9fe1'}
     response = rq.post(url=url, data=payload, headers=head)
     b=response.json()
     #print(b["orderCreateTransaction"]["id"] + " | " + b["orderCreateTransaction"]["instrument"])
-    return b["orderCreateTransaction"]["id"]
+    #print(b)
+    return b["orderFillTransaction"]["tradeOpened"]["tradeID"]
 
 def GetCurrPrice(pair):
     url = host + "/v1/prices?instruments=" + pair
@@ -167,11 +168,19 @@ if __name__ == '__main__':
     #GetOpenTradesId()
     #CloseOpenTrades()
     #for x in GetOpenTradesId():
-    print(CloseOpenTrades(116))
+    #a = CloseOpenTrades(103)
+
     GetOpenTradesId()
     #OANDAServiceCheck()
     #a,b = GetPairHistForCheck('EUR_USD', count='12', gran = 'M15', query='Prev_9 < 0 and Prev_10 < 0')
     #print(str(a) + " | " + str(b))
-
-
+    """
+    curr = 'EUR_USD'
+    strategyName = 'S1'
+    units = '2'
+    side = "SELL"
+    type = "MARKET"
+    newOrderID = OpenMarketOrder(curr, units, side, type)
+    print(newOrderID)
+    """
 
