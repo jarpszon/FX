@@ -10,6 +10,8 @@ type = "MARKET"
 
 """
 1. Plik strategyName_LastBarStartTime.txt z ostatnim barem w formacie %Y-%m-%d %H:%M:%S
+2. Lastbarstatus
+3. LastOrder.txt
 
 """
 
