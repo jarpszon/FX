@@ -1,4 +1,4 @@
-import yaml
+import pyyaml as yaml
 import json
 import requests as rq
 import datetime as dt
