@@ -15,7 +15,7 @@ host=data_loaded['host']
 #def OpenMarketOrder(pair, units,side):
 
 def OANDAServiceCheck():
-#nie działa
+#doesn't work
     url="http://api-status.oanda.com/api/v1/services"
     head = {'Content-Type': "application/json", 'Authorization': 'Bearer 36d05c504600ee53cbaebd2d7fd872f6-ec6ea1868a87be65621c6c23ba0e9fe1'}
     response = rq.get(url) #--( , headers=head)
