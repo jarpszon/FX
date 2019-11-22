@@ -1,39 +1,52 @@
-import yaml
-import json
-import requests as rq
-import datetime as dt
 import OandaAPI as API
-
-with open("config.yaml", 'r') as stream:
-    data_loaded = yaml.safe_load(stream)
-
-token=data_loaded['token']
-user=data_loaded['username']
-host=data_loaded['host']
+import datetime
+from datetime import datetime
 
 
-def OpenMarketOrder(pair, units, side, type,ts):
-    url = host + "/v3/accounts/101-004-12033863-001/orders"
-    payload =  "{\"order\": {\"instrument\": \"" + pair +  "\", \"units\": "  + units + ", \"side\": \"" + side + "\", \"type\": \"" + type + "\", \"trailingstop\": \"" + ts + "\"}}"
-    print(payload)
-    head = {'Content-Type': "application/json", 'Authorization': 'Bearer 36d05c504600ee53cbaebd2d7fd872f6-ec6ea1868a87be65621c6c23ba0e9fe1'}
-    response = rq.post(url=url, data=payload, headers=head)
-    b=response.json()
-    #print(b["orderCreateTransaction"]["id"] + " | " + b["orderCreateTransaction"]["instrument"])
-    return b["orderCreateTransaction"]["id"]
+curr = 'EUR_USD'
+strategyName = 'S1'
+units = '2'
+side = "SELL"
+type = "MARKET"
 
-OpenMarketOrder("EUR_USD","2", "sell", "MARKET","1000")
 """
-#API.GetOpenTradesId()
-url = host + "/v3/accounts/101-004-12033863-001/openTrades"
-head = {'Content-Type': "application/json",
-        'Authorization': 'Bearer 36d05c504600ee53cbaebd2d7fd872f6-ec6ea1868a87be65621c6c23ba0e9fe1'}
-response = rq.get(url, headers=head)
-res_json = response.json()
-print(res_json)
+1. Plik strategyName_LastBarStartTime.txt z ostatnim barem w formacie %Y-%m-%d %H:%M:%S
 """
-for x in API.GetOpenTradesId():
-    API.CloseOpenTrades(x)
-API.GetOpenTradesId()
-"""
+
+#check if current bar meet query criteria
+currBarrStartTime,queryOK = GetPairHistForCheck(curr, count='12', gran = 'M15', query='Prev_1 > 0 ')
+#print(str(currBarrStartTime) + " | " + str(queryOK))
+
+#getting last full bast start time
+with open("/usr/FX/OANDA/FX/venv/src/" + strategyName + '_LastBarStartTime.txt','r') as h:
+    lastBarStartTime = h.readline()
+if lastBarStartTime:
+    lastBarStartTime = datetime.strptime(lastBarStartTime, "%Y-%m-%d %H:%M:%S" ) #  "%Y-%m-%dT%H:%M:%S.000000Z")
+currBarrStartTime = datetime.strptime(currBarrStartTime, "%Y-%m-%dT%H:%M:%S.000000Z")
+#print(str(lastBarStartTime) + ' | ' + str(currBarrStartTime) )
+
+#check if current bar start time is > then last bar start time and if the query is met
+if lastBarStartTime < currBarrStartTime:
+    with open("/usr/FX/OANDA/FX/venv/src/" + strategyName + '_LastOrder.txt', 'w+') as h:
+        lastOrderID = int(h.readline())
+    if lastOrderID:
+        a = CloseOpenTrades(lastOrderID + 1)
+        with open("/usr/FX/OANDA/FX/venv/src/" + strategyName + '_LastOrder.txt', 'w+') as h:
+            h.write("")
+        with open("/usr/FX/OANDA/FX/venv/src/" + strategyName + '_StratSummary.txt', 'a+') as h:
+            h.write(str(a))
+
+    if queryOK ==1:
+        a=OpenMarketOrder(curr, units, side, type)
+        with open("/usr/FX/OANDA/FX/venv/src/" + strategyName + '_LastOrder.txt', 'w+') as h:
+            h.write(str(a))
+
+    with open("/usr/FX/OANDA/FX/venv/src/" + strategyName + '_LastBarStartTime.txt','w+') as h:
+        h.write(str(currBarrStartTime))
+
+
+with open('/usr/FX/OANDA/FX/venv/src/logStrat1SA.txt','w+') as f:
+    f.write(str(datetime.now()))
+
+
 
