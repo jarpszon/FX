@@ -14,7 +14,7 @@ type = "MARKET"
 """
 
 #check if current bar meet query criteria
-currBarrStartTime,queryOK = GetPairHistForCheck(curr, count='12', gran = 'M15', query='Prev_1 > 0 ')
+currBarrStartTime,queryOK = API.GetPairHistForCheck(curr, count='12', gran = 'M15', query='Prev_1 > 0 ')
 #print(str(currBarrStartTime) + " | " + str(queryOK))
 
 #getting last full bast start time
@@ -30,14 +30,14 @@ if lastBarStartTime < currBarrStartTime:
     with open("/usr/FX/OANDA/FX/venv/src/" + strategyName + '_LastOrder.txt', 'w+') as h:
         lastOrderID = int(h.readline())
     if lastOrderID:
-        a = CloseOpenTrades(lastOrderID + 1)
+        a = API.CloseOpenTrades(lastOrderID + 1)
         with open("/usr/FX/OANDA/FX/venv/src/" + strategyName + '_LastOrder.txt', 'w+') as h:
             h.write("")
         with open("/usr/FX/OANDA/FX/venv/src/" + strategyName + '_StratSummary.txt', 'a+') as h:
             h.write(str(a))
 
     if queryOK ==1:
-        a=OpenMarketOrder(curr, units, side, type)
+        a=API.OpenMarketOrder(curr, units, side, type)
         with open("/usr/FX/OANDA/FX/venv/src/" + strategyName + '_LastOrder.txt', 'w+') as h:
             h.write(str(a))
 
