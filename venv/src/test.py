@@ -37,7 +37,7 @@ if lastBarStartTime < currBarrStartTime:
         a = API.CloseOpenTrades(str(int(lastOrderID)))
         # start
         with open("/usr/FX/OANDA/FX/venv/src/" + strategyName + '_spr.txt', 'a+') as h:
-            h.write(str(str(a))
+            h.write(str(str(a)))
         # stop
         with open("/usr/FX/OANDA/FX/venv/src/" + strategyName + '_LastOrder.txt', 'w+') as h:
             h.write("")
