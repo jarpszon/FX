@@ -30,19 +30,19 @@ if lastBarStartTime < currBarrStartTime:
     with open("/usr/FX/OANDA/FX/venv/src/" + strategyName + '_LastOrder.txt', 'w+') as h:
         lastOrderID = h.readline()
         # start
-        with open("/usr/FX/OANDA/FX/venv/src/" + strategyName + '_spr.txt', 'a+') as h:
-            h.write(str(lastOrderID))
+    with open("/usr/FX/OANDA/FX/venv/src/" + strategyName + '_spr.txt', 'a+') as h:
+        h.write(str(lastOrderID))
         # stop
-        if lastOrderID:
-            a = API.CloseOpenTrades(str(int(lastOrderID)))
+    if lastOrderID:
+        a = API.CloseOpenTrades(str(int(lastOrderID)))
         # start
-        with open("/usr/FX/OANDA/FX/venv/src/" + strategyName + '_spr.txt', 'a+') as h:
-            h.write(str(str(a))
+    with open("/usr/FX/OANDA/FX/venv/src/" + strategyName + '_spr.txt', 'a+') as h:
+        h.write(str(str(a))
         # stop
-        with open("/usr/FX/OANDA/FX/venv/src/" + strategyName + '_LastOrder.txt', 'w+') as h:
-            h.write("")
-        with open("/usr/FX/OANDA/FX/venv/src/" + strategyName + '_StratSummary.txt', 'a+') as h:
-            h.write(str(a))
+    with open("/usr/FX/OANDA/FX/venv/src/" + strategyName + '_LastOrder.txt', 'w+') as h:
+        h.write("")
+    with open("/usr/FX/OANDA/FX/venv/src/" + strategyName + '_StratSummary.txt', 'a+') as h:
+        h.write(str(a))
 
     if queryOK ==1:
         a=API.OpenMarketOrder(curr, units, side, type)
