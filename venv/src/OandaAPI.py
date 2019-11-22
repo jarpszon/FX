@@ -4,7 +4,7 @@ import requests as rq
 import datetime as dt
 import pandas as pd
 
-with open("config.yaml", 'r') as stream:
+with open("/usr/FX/OANDA/FX/venv/src/config.yaml", 'r') as stream:
     data_loaded = yaml.safe_load(stream)
 
 token=data_loaded['token']
