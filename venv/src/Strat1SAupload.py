@@ -5,7 +5,7 @@ import datetime as dt
 from datetime import datetime
 import pandas as pd
 
-with open("config.yaml", 'r') as stream:
+with open("/usr/FX/OANDA/FX/venv/src/config.yaml", 'r') as stream:
     data_loaded = yaml.safe_load(stream)
 
 token=data_loaded['token']
@@ -44,13 +44,13 @@ def GetOpenTradesId():
     for x in range(len(res_json['trades'])):
         a.append(res_json['trades'][x]['id'])
         #print(res_json['trades'][x]['id'])
-    print(a)
+#    print(a)
     return a
 
 def OpenMarketOrder(pair, units, side, type):
     url = host + "/v3/accounts/101-004-12033863-001/orders"
     payload =  "{\"order\": {\"instrument\": \"" + pair +  "\", \"units\": "  + units + ", \"side\": \"" + side + "\", \"type\": \"" + type + "\"}}"
-    print(payload)
+#    print(payload)
     head = {'Content-Type': "application/json", 'Authorization': 'Bearer 36d05c504600ee53cbaebd2d7fd872f6-ec6ea1868a87be65621c6c23ba0e9fe1'}
     response = rq.post(url=url, data=payload, headers=head)
     b=response.json()
@@ -87,12 +87,12 @@ def GetPairHist(pair, startDate, endDate,gran, count = '', file = ''):
         url = host + "/v1/candles?instrument=" + pair + "&count=" + count + "&candleFormat=midpoint&granularity=" + gran + "&dailyAlignment=0&alignmentTimezone=America%2FNew_York"
     else:
         url = host + "/v1/candles?instrument=" + pair + "&start=" + startDate + "&end=" + endDate +  "&candleFormat=midpoint&granularity=" + gran + "&dailyAlignment=0&alignmentTimezone=America%2FNew_York"
-    print(url)
+ #   print(url)
 
 # API request
     head = {'Authorization': 'Bearer ' + token}
     response = rq.get(url, headers=head)
-    print(response.status_code)
+  #  print(response.status_code)
     if response.status_code == 200:
         res_json = response.json()
         with open(file, "a+") as f:
@@ -172,33 +172,35 @@ type = "MARKET"
 
 #check if current bar meet query criteria
 currBarrStartTime,queryOK = GetPairHistForCheck(curr, count='12', gran = 'M15', query='Prev_1 > 0 ')
-print(str(currBarrStartTime) + " | " + str(queryOK))
+#print(str(currBarrStartTime) + " | " + str(queryOK))
 
 #getting last full bast start time
-with open(strategyName + '_LastBarStartTime.txt','r') as h:
+with open("/usr/FX/OANDA/FX/venv/src/" + strategyName + '_LastBarStartTime.txt','r') as h:
     lastBarStartTime = h.readline()
 if lastBarStartTime:
     lastBarStartTime = datetime.strptime(lastBarStartTime, "%Y-%m-%d %H:%M:%S" ) #  "%Y-%m-%dT%H:%M:%S.000000Z")
 currBarrStartTime = datetime.strptime(currBarrStartTime, "%Y-%m-%dT%H:%M:%S.000000Z")
-print(str(lastBarStartTime) + ' | ' + str(currBarrStartTime) )
+#print(str(lastBarStartTime) + ' | ' + str(currBarrStartTime) )
 
 #check if current bar start time is > then last bar start time and if the query is met
 if lastBarStartTime < currBarrStartTime:
-    with open(strategyName + '_LastOrder.txt', 'w+') as h:
-        lastOrderID = h.readline()
+    with open("/usr/FX/OANDA/FX/venv/src/" + strategyName + '_LastOrder.txt', 'w+') as h:
+        lastOrderID = int(h.readline())
     if lastOrderID:
-        a = CloseOpenTrades(lastOrderID)
-        with open(strategyName + '_LastOrder.txt', 'w+') as h:
+        a = CloseOpenTrades(lastOrderID + 1)
+        with open("/usr/FX/OANDA/FX/venv/src/" + strategyName + '_LastOrder.txt', 'w+') as h:
             h.write("")
-        with open(strategyName + '_StratSummary.txt', 'a+') as h:
+        with open("/usr/FX/OANDA/FX/venv/src/" + strategyName + '_StratSummary.txt', 'a+') as h:
             h.write(str(a))
 
     if queryOK ==1:
         a=OpenMarketOrder(curr, units, side, type)
-        with open(strategyName + '_LastOrder.txt', 'w+') as h:
+        with open("/usr/FX/OANDA/FX/venv/src/" + strategyName + '_LastOrder.txt', 'w+') as h:
             h.write(str(a))
 
-    with open(strategyName + '_LastBarStartTime.txt','w+') as h:
+    with open("/usr/FX/OANDA/FX/venv/src/" + strategyName + '_LastBarStartTime.txt','w+') as h:
         h.write(str(currBarrStartTime))
 
 
+with open('/usr/FX/OANDA/FX/venv/src/logStrat1SA.txt','w+') as f:
+	f.write(str(datetime.now()))
