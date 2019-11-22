@@ -29,8 +29,16 @@ currBarrStartTime = datetime.strptime(currBarrStartTime, "%Y-%m-%dT%H:%M:%S.0000
 if lastBarStartTime < currBarrStartTime:
     with open("/usr/FX/OANDA/FX/venv/src/" + strategyName + '_LastOrder.txt', 'w+') as h:
         lastOrderID = h.readline()
-    if lastOrderID:
-        a = API.CloseOpenTrades(str(int(lastOrderID)))
+        # start
+        with open("/usr/FX/OANDA/FX/venv/src/" + strategyName + '_spr.txt', 'a+') as h:
+            h.write(str(lastOrderID))
+        # stop
+        if lastOrderID:
+            a = API.CloseOpenTrades(str(int(lastOrderID)))
+        # start
+        with open("/usr/FX/OANDA/FX/venv/src/" + strategyName + '_spr.txt', 'a+') as h:
+            h.write(str(str(a))
+        # stop
         with open("/usr/FX/OANDA/FX/venv/src/" + strategyName + '_LastOrder.txt', 'w+') as h:
             h.write("")
         with open("/usr/FX/OANDA/FX/venv/src/" + strategyName + '_StratSummary.txt', 'a+') as h:
