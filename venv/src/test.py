@@ -18,7 +18,7 @@ currBarrStartTime,queryOK = API.GetPairHistForCheck(curr, count='12', gran = 'M1
 #print(str(currBarrStartTime) + " | " + str(queryOK))
 
 #getting last full bast start time
-with open("/usr/FX/OANDA/FX/venv/src/" + strategyName + '_LastBarStartTime.txt','r') as h:
+with open("/usr/FX/OANDA/FX/venv/src/" + strategyName + '_LastBarStartTime.txt','w+') as h:
     lastBarStartTime = h.readline()
 if lastBarStartTime:
     lastBarStartTime = datetime.strptime(lastBarStartTime, "%Y-%m-%d %H:%M:%S" ) #  "%Y-%m-%dT%H:%M:%S.000000Z")
