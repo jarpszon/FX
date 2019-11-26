@@ -28,7 +28,7 @@ if lastBarStartTime:
     lastBarStartTime = datetime.strptime(lastBarStartTime, "%Y-%m-%d %H:%M:%S" ) #  "%Y-%m-%dT%H:%M:%S.000000Z")
 else:
     with open("/usr/FX/OANDA/FX/venv/src/" + strategyName + '_LastBarStartTime.txt','w+') as h:
-        h.write(str(currBarStartTime))
+        h.write(str(currBarrStartTime))
     
 
 
