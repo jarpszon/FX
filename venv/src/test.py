@@ -9,6 +9,9 @@ units = '2'
 side = "SELL"
 type = "MARKET"
 
+
+file_path = "/usr/FX/OANDA/FX/venv/src/"
+#file_path = ''
 """
 1. Plik strategyName_LastBarStartTime.txt z ostatnim barem w formacie %Y-%m-%d %H:%M:%S
 """
@@ -18,50 +21,32 @@ currBarrStartTime,queryOK = API.GetPairHistForCheck(curr, count='12', gran = 'M1
 #print(str(currBarrStartTime) + " | " + str(queryOK))
 
 #getting last full bast start time
-with open("/usr/FX/OANDA/FX/venv/src/" + strategyName + '_LastBarStartTime.txt','w+') as h:
+with open(file_path + strategyName + '_LastBarStartTime.txt','r') as h:
     lastBarStartTime = h.readline()
 
-currBarrStartTime = datetime.strptime(currBarrStartTime, "%Y-%m-%dT%H:%M:%S.000000Z")
-#print(str(lastBarStartTime) + ' | ' + str(currBarrStartTime) )
-
 if lastBarStartTime:
-    lastBarStartTime = datetime.strptime(lastBarStartTime, "%Y-%m-%d %H:%M:%S.000000Z" ) #  "%Y-%m-%dT%H:%M:%S.000000Z")
-else:
-    with open("/usr/FX/OANDA/FX/venv/src/" + strategyName + '_LastBarStartTime.txt','w+') as h:
-        h.write(str(currBarrStartTime))
-    
+    lastBarStartTime = datetime.strptime(lastBarStartTime, "%Y-%m-%d %H:%M:%S" ) #  "%Y-%m-%dT%H:%M:%S.000000Z")
 
+currBarrStartTime = datetime.strptime(currBarrStartTime, "%Y-%m-%dT%H:%M:%S.000000Z")
+print(str(lastBarStartTime) + ' | ' + str(currBarrStartTime) )
 
 #check if current bar start time is > then last bar start time and if the query is met
 if lastBarStartTime < currBarrStartTime:
-    with open("/usr/FX/OANDA/FX/venv/src/" + strategyName + '_LastOrder.txt', 'w+') as h:
+    with open(file_path + strategyName + '_LastOrder.txt', 'r+') as h:
         lastOrderID = h.readline()
-        # start
-    with open("/usr/FX/OANDA/FX/venv/src/" + strategyName + '_spr.txt', 'a+') as h:
-        h.write(str(lastOrderID))
-        # stop
+    print('Last order from the file: ' + lastOrderID)
     if lastOrderID:
-        a = API.CloseOpenTrades(str(int(lastOrderID)))
-        # start
-        with open("/usr/FX/OANDA/FX/venv/src/" + strategyName + '_spr.txt', 'a+') as h:
-            h.write(str(str(a)))
-        # stop
-        with open("/usr/FX/OANDA/FX/venv/src/" + strategyName + '_LastOrder.txt', 'w+') as h:
+        a = API.CloseOpenTrades(str(int(lastOrderID) + 1))
+        print('a = ' + str(a))
+        with open(file_path + strategyName + '_LastOrder.txt', 'w+') as h:
             h.write("")
-        with open("/usr/FX/OANDA/FX/venv/src/" + strategyName + '_StratSummary.txt', 'a+') as h:
+        with open(file_path + strategyName + '_StratSummary.txt', 'a+') as h:
             h.write(str(a))
 
     if queryOK ==1:
         a=API.OpenMarketOrder(curr, units, side, type)
-        with open("/usr/FX/OANDA/FX/venv/src/" + strategyName + '_LastOrder.txt', 'w+') as h:
+        with open(file_path + strategyName + '_LastOrder.txt', 'w+') as h:
             h.write(str(a))
 
-    with open("/usr/FX/OANDA/FX/venv/src/" + strategyName + '_LastBarStartTime.txt','w+') as h:
+    with open(file_path + strategyName + '_LastBarStartTime.txt','w+') as h:
         h.write(str(currBarrStartTime))
-
-
-with open('/usr/FX/OANDA/FX/venv/src/logStrat1SA.txt','w+') as f:
-    f.write(str(datetime.now()))
-
-
-
