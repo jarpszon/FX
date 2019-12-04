@@ -37,7 +37,7 @@ if lastBarStartTime < currBarrStartTime:
     print('Last order from the file: ' + lastOrderID)
 
     if lastOrderID:
-        lastOrderID = int(lastOrderID) + 1
+        lastOrderID = int(lastOrderID) # + 1
         a = API.CloseOpenTrades(str(lastOrderID))
         print('a = ' + str(a))
         with open(file_path + strategyName + '_LastOrder.txt', 'w+') as h:
