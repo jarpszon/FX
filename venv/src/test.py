@@ -32,8 +32,18 @@ print(str(lastBarStartTime) + ' | ' + str(currBarrStartTime) )
 
 #check if current bar start time is > then last bar start time and if the query is met
 if lastBarStartTime < currBarrStartTime:
-    for x in API.GetOpenTradesId():
-        CloseOpenTrades(str(x))
+    with open(file_path + strategyName + '_LastOrder.txt', 'r+') as h:
+        lastOrderID = h.readline()
+    print('Last order from the file: ' + lastOrderID)
+
+    if lastOrderID:
+        lastOrderID = int(lastOrderID) + 1
+        a = API.CloseOpenTrades(str(lastOrderID))
+        print('a = ' + str(a))
+        with open(file_path + strategyName + '_LastOrder.txt', 'w+') as h:
+            h.write("")
+        with open(file_path + strategyName + '_StratSummary.txt', 'a+') as h:
+            h.write(str(a))
 
     if queryOK ==1:
         a=API.OpenMarketOrder(curr, units, side, type)
@@ -42,3 +52,4 @@ if lastBarStartTime < currBarrStartTime:
 
     with open(file_path + strategyName + '_LastBarStartTime.txt','w+') as h:
         h.write(str(currBarrStartTime))
+
