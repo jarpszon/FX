@@ -5,7 +5,7 @@ from datetime import datetime
 
 curr = 'EUR_USD'
 strategyName = 'S1'
-units = '2'
+units = '100'
 side = "SELL"
 type = "MARKET"
 
